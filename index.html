@@ -2,12 +2,30 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Antonella - Know Your Body Early</title>
 <style>
   *{box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
-  body{margin:0;background:#FFF5F8;color:#2D1A2E}
-  .container{max-width:480px;margin:0 auto;padding:20px;padding-bottom:100px}
+  /* === NEW LAYOUT: ONLY MIDDLE SCROLLS, HEADER + NAV NEVER MOVE === */
+  html,body{height:100%;margin:0;overscroll-behavior:none}
+  body{
+    background:#FFF5F8;color:#2D1A2E;
+    display:flex !important;
+    flex-direction:column !important;
+    height:100dvh !important;
+    height:100vh !important;
+    overflow:hidden !important;
+    position:relative;
+  }
+  .container{
+    max-width:480px;width:100%;margin:0 auto;
+    flex:1 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    padding:20px 20px 24px 20px;
+    scroll-behavior:smooth;
+  }
   .logo{font-size:32px;font-weight:800;color:#D6336C;text-align:center;letter-spacing:-1px}
   .tag{text-align:center;color:#7A5A7A;margin-top:-8px}
   .card{background:white;border-radius:20px;padding:18px;margin:14px 0;box-shadow:0 4px 20px rgba(214,51,108,.08);position:relative;overflow:hidden}
@@ -93,100 +111,188 @@
   .clinic{width:92px;height:96px;background:white;border:3px solid #D6336C;border-radius:14px;position:relative;text-align:center;padding-top:14px;font-size:28px}
   .clinic small{display:block;font-size:11px;font-weight:800;color:#D6336C;margin-top:4px}
   .clinic:before{content:"+";position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:26px;height:26px;background:#D6336C;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900}
+
+  /* === TOP HEADER - STATIC, NEVER SCROLLS === */
+  .top-header{flex-shrink:0 !important;background:#FFF5F8;border-bottom:1px solid #F1D5E0;width:100%}
+  .top-header-inner{max-width:480px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center}
+  .top-logo{font-size:22px;font-weight:800;color:#D6336C;letter-spacing:-.5px;line-height:1}
+  .top-logo small{display:block;font-size:10px;font-weight:600;color:#7A5A7A;letter-spacing:.5px;margin-top:2px}
+  .top-user{text-align:right}
+  .top-user b{font-size:14px}
+  .top-user div{font-size:11px;color:#888}
+
+  /* === TABS === */
+  .tab-page{display:none}
+  .tab-page.active{display:block;animation:fadeIn .25s ease}
+
+  /* === BOTTOM NAV - STATIC, NEVER SCROLLS, NEVER HIDES === */
+  .bottom-nav{
+    flex-shrink:0 !important;
+    position:static !important;
+    bottom:auto !important; top:auto !important; left:auto !important; right:auto !important;
+    transform:none !important;
+    z-index:10;
+    width:100%;
+    background:white;
+    border-top:1px solid #F1D5E0;
+    display:flex !important;
+    justify-content:space-around;
+    padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+    box-shadow:0 -4px 20px rgba(0,0,0,.08);
+    visibility:visible !important; opacity:1 !important;
+  }
+  .bottom-nav button{flex:1;background:none!important;color:#9A7A9A!important;padding:6px 1px!important;border-radius:0!important;font-size:10px!important;font-weight:600!important;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;min-width:0}
+  .bottom-nav button span{font-size:20px;line-height:1}
+  .bottom-nav button.active{color:#D6336C!important}
+  .bottom-nav button.active::before{content:"";width:28px;height:4px;background:#D6336C;border-radius:10px;position:absolute;top:-1px;left:50%;transform:translateX(-50%)}
+  .profile-avatar{width:72px;height:72px;background:#D6336C;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;margin:0 auto 10px}
+  .profile-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #FFF0F5;font-size:14px}
+  .profile-row b{color:#2D1A2E}
+  .profile-row span{color:#7A5A7A}
 </style>
 </head>
 <body>
-<div class="container">
+
+<!-- TOP HEADER - STATIC -->
+<header class="top-header">
+  <div class="top-header-inner">
+    <div class="top-logo">Antonella<small>KNOW YOUR BODY EARLY</small></div>
+    <div class="top-user"><b id="helloName">Hi, Guest</b><div id="helloState">Lagos, Nigeria</div></div>
+  </div>
+</header>
+
+<!-- SCROLLABLE MIDDLE ONLY -->
+<div class="container" id="mainScroll">
   <div id="authPage"><div class="logo">Antonella</div><p class="tag">Know Your Body Early • Nigeria</p>
     <div class="card"><h3 id="authTitle">Create Account</h3><input id="name" placeholder="Full Name e.g. Ada Okafor"><input id="email" placeholder="Email or Phone"><input id="password" type="password" placeholder="Password"><select id="state"><option>Lagos</option><option>Abuja FCT</option><option>Rivers</option><option>Kano</option><option>Oyo</option><option>Kaduna</option><option>Other</option></select><button onclick="signup()">Create Account</button><p style="text-align:center" class="small">Already have account? <a href="#" onclick="toggleAuth()">Login</a></p><p class="small" style="text-align:center">Demo: Use any email/password. Data saves in this browser only (Dummy Mode).</p></div>
+    <p class="small" style="text-align:center">Use the bottom menu to explore — login to unlock all tabs.</p>
   </div>
 
   <div id="appPage" class="hidden">
-    <div style="display:flex;justify-content:space-between;align-items:center"><div><b id="helloName">Hi, Ada</b><div class="small">Lagos, Nigeria</div></div><button style="width:auto;padding:8px 14px" onclick="logout()">Logout</button></div>
-    <div class="card"><h3>Today's Health</h3><div class="grid"><div class="stat"><b id="dashPeriod">--</b>Next Period</div><div class="stat"><b id="dashSteps">0</b>Steps Today</div><div class="stat"><b id="dashWeight">--</b>Weight (kg)</div><div class="stat"><b id="dashBMI">--</b>BMI</div></div></div>
-    <div class="card"><h3>💡 Why Early Matters in Nigeria</h3><div class="fact-grid"><div class="fact"><b>44,196</b><span>New cases in Nigeria in 2024</span></div><div class="fact"><b>49.3%</b><span>Of new cancers among women</span></div><div class="fact"><b>21,309</b><span>Deaths in Nigeria in 2024</span></div><div class="fact"><b>27%</b><span>Had early stage (I or II) in ABC-DO study</span></div></div><div class="info-box"><b>What this means:</b> Many women are diagnosed late. Finding a change early and getting it checked promptly gives more treatment options.</div></div>
-    <div class="card"><h3>🩷 Breast Self-Check</h3><p class="small">Last check: <span id="lastBreast">Never</span></p><button onclick="showPage('breast')">Do Monthly Check</button><button class="secondary" style="margin-top:8px" onclick="showPage('demo')">▶ Watch How To Check - 5 Steps Animation</button><button class="secondary" style="margin-top:8px" onclick="showPage('learn')">📖 Learn More</button><button class="secondary" style="margin-top:8px" onclick="showPage('wazobia')">🌍 Wazobia - Pidgin / Hausa / Yoruba / Igbo</button></div>
-    <div class="card"><h3>🩺 Cervical Risk Check</h3><p class="small">8 questions • 2 mins • Not a diagnosis</p><button class="secondary" onclick="showPage('cervical')">Start Risk Check - Wazobia</button></div>
-
-    <!-- WAZOBIA BREAST -->
-    <div id="page-wazobia" class="card">
-      <h3>🌍 Wazobia - Check Your Breast In Your Language</h3>
-      <div class="lang-btns"><button class="active" onclick="switchLang('en',this)">English</button><button onclick="switchLang('pidgin',this)">Pidgin</button><button onclick="switchLang('hausa',this)">Hausa</button><button onclick="switchLang('yoruba',this)">Yoruba</button><button onclick="switchLang('igbo',this)">Igbo</button></div>
-      <div id="lang-en" class="lang-block active"><h4>How To Check - 5 Steps</h4><p><b>1. Get Ready:</b> Choose a regular time, like when you shower. If you have periods, a few days after your period ends may be more comfortable.</p><p><b>2. Look in Mirror:</b> Arms relaxed, then raised. Look for change in size, shape, skin dimpling, or change around nipple.</p><p><b>3. Feel:</b> Use pads of fingers, small circles. Cover whole breast, around nipple, up to collarbone, into armpit. Light then firmer.</p><p><b>4. Notice What Is New:</b> New lump, thickening, swelling, nipple turned inward, unexpected discharge, rash, persistent pain.</p><p><b>5. Get Checked Promptly:</b> See a health professional, even if painless. Don't wait for next check.</p><div class="warn-box"><b>Go to clinic quickly if you see:</b> New lump, change in size/shape, skin dimpling, nipple turned inward, discharge, rash, or pain that persists.</div></div>
-      <div id="lang-pidgin" class="lang-block"><h4>How To Check Your Breast - 5 Steps (Pidgin)</h4><p><b>1. Ready:</b> Choose time wey you dey comfortable, like when you dey bath. If you dey see period, check few days after period finish.</p><p><b>2. Look for Mirror:</b> First put hand down, after raise am up. Look your two breasts well.</p><p><b>3. Touch Am:</b> Use finger tip, do small circle-circle. Touch everywhere — whole breast, around nipple, reach collarbone, enter armpit. Start soft, after press small small.</p><p><b>4. Notice Wetin New:</b> New lump, thick place, swelling, nipple wey don enter inside, water wey dey comot, rash, or pain wey no dey go.</p><p><b>5. Go Hospital Sharp-Sharp:</b> Go meet doctor, even if e no dey pain you. No wait till next check.</p><div class="warn-box"><b>Run go clinic quick if you see:</b> New lump, breast don big or small, skin don change, nipple don enter inside, water dey comot, rash, or pain wey no gree go.</div></div>
-      <div id="lang-hausa" class="lang-block"><h4>Yadda Ake Duba Nono - Matakai 5 (Hausa)</h4><p><b>1. Shirya:</b> Zabi lokaci da ya dace, kamar lokacin wanka. Idan kina ganin al'ada, ki duba kwanaki kadan bayan al'ada ta kare.</p><p><b>2. Duba A Madubi:</b> Da farko sa hannuwanki a kasa, sannan ki daga su sama. Ki duba nononki biyu.</p><p><b>3. Taba:</b> Ki yi amfani da yatsun hannu, ki yi karamar zagaye. Ki taba duk nono, kewaye da kan nono, har zuwa kashin wuya, da cikin hammata.</p><p><b>4. Lura Da Abin Da Ya Sabo:</b> Sabon kumburi, kauri, kumburi, kan nono da ya shiga ciki, ruwa da ba a zata ba, kuraje, ko ciwo da bai tafi ba.</p><p><b>5. Ki Je Asibiti Da Sauri:</b> Ki je wurin likita, ko da kumburin ba ya ciwo. Kada ki jira.</p><div class="warn-box"><b>Ki je asibiti da sauri idan kin ga:</b> Sabon kumburi, canjin girma, fatar ta canza, kan nono ya shiga ciki, ruwa ya fito, kuraje, ko ciwo da bai tafi ba.</div></div>
-      <div id="lang-yoruba" class="lang-block"><h4>Bi O Se Le Se Ayẹwo Ọmu Rẹ - Igbesẹ 5 (Yoruba)</h4><p><b>1. Mura:</b> Yan akoko ti o baamu, bii nigba ti o ba n wẹ. Ti o ba n ri nkan oṣu, ṣayẹwo ni ọjọ diẹ lẹhin ti nkan oṣu ba pari.</p><p><b>2. Wo Ninu Digii:</b> Kọkọ fi ọwọ rẹ silẹ, lẹhin na gbe wọn soke. Wo ọmu rẹ mejeeji.</p><p><b>3. Fọwọkan:</b> Lo ika ọwọ rẹ, ṣe iyika kekere. Fọwọkan gbogbo ọmu, yika ori ọmu, de egungun ọrun, ati sinu abẹ́ ọwọ.</p><p><b>4. Kiyesi Ohun Tuntun:</b> Iṣu tuntun, ibi ti o nipọn, wiwu, ori ọmu ti o ti wọle, omi ti ko yẹ, sisu, tabi irora ti ko lọ.</p><p><b>5. Lọ Si Ile-Iwosan Ni Kiakia:</b> Lọ sọdọ dokita, paapaa ti iṣu na ko ba dun ọ. Maṣe duro.</p><div class="warn-box"><b>Lọ si ile-iwosan ni kiakia ti o ba ri:</b> Iṣu tuntun, iyipada iwọn, iyipada awọ ara, ori ọmu ti wọle, omi ti n jade, sisu, tabi irora ti ko lọ.</div></div>
-      <div id="lang-igbo" class="lang-block"><h4>Otu Esi Elele Ara Gi - Nzọụkwụ 5 (Igbo)</h4><p><b>1. Kwadebe:</b> Họrọ oge dị gị mma, dịka mgbe ị na-asa ahụ. Ọ bụrụ na ị na-ahụ nsọ, lelee ụbọchị ole na ole mgbe nsọ gwụchara.</p><p><b>2. Lee Na Enyo:</b> Buru ụzọ tinye aka gị ala, emesia welie ha elu. Lee ara gị abụọ.</p><p><b>3. Metụ Aka:</b> Jiri mkpịsị aka gị, mee obere okirikiri. Metụ ara niile, gburugburu ọnụ ara, ruo ọkpụkpụ olu, na n'ime ogwe aka.</p><p><b>4. Mara Ihe Ọhụrụ:</b> Ọkpụkpụ ọhụrụ, ebe gbara ọkpụrụkpụ, ọzịza, ọnụ ara batara n'ime, mmiri na-apụta, ọkụ ọkụ, ma ọ bụ mgbu na-adịghị apụ.</p><p><b>5. Gaa Ụlọ Ọgwụ Ngwa Ngwa:</b> Gaa hụ dọkịta, ọbụna ma ọ bụrụ na ọkpụkpụ ahụ anaghị afụ ụfụ. Echela.</p><div class="warn-box"><b>Gaa ụlọ ọgwụ ngwa ngwa ọ bụrụ na ị hụ:</b> Ọkpụkpụ ọhụrụ, mgbanwe nha, mgbanwe akpụkpọ ahụ, ọnụ ara batara n'ime, mmiri na-apụta, ọkụ ọkụ, ma ọ bụ mgbu na-adịghị apụ.</div></div>
-      <button onclick="showPage('demo')">▶ Go To Animation Demo</button>
+    <div id="tab-home" class="tab-page active">
+      <div class="card"><h3>Today's Health</h3><div class="grid"><div class="stat"><b id="dashPeriod">--</b>Next Period</div><div class="stat"><b id="dashSteps">0</b>Steps Today</div><div class="stat"><b id="dashWeight">--</b>Weight (kg)</div><div class="stat"><b id="dashBMI">--</b>BMI</div></div>
+      <button class="secondary" style="margin-top:12px" onclick="switchTab('check')">🩷 Start Breast Examination →</button></div>
+      <div class="card"><h3>💡 Why Early Detection Matters in Nigeria</h3><div class="fact-grid"><div class="fact"><b>44,196</b><span>New cases in Nigeria in 2024</span></div><div class="fact"><b>49.3%</b><span>Of new cancers among women</span></div><div class="fact"><b>21,309</b><span>Deaths in Nigeria in 2024</span></div><div class="fact"><b>27%</b><span>Had early stage (I or II) in ABC-DO study</span></div></div><div class="info-box"><b>What this means:</b> Many women are diagnosed late. Finding a change early and getting it checked promptly gives more treatment options.</div></div>
+      <div class="card"><h3>🩺 Quick Actions</h3><button onclick="switchTab('track')">📅 Track Period / Weight / Steps</button><button class="secondary" style="margin-top:8px" onclick="switchTab('cervical')">🩺 Cervical Risk Check</button><button class="secondary" style="margin-top:8px" onclick="switchTab('learn')">📖 Learn Warning Signs</button></div>
     </div>
 
-    <!-- PERIOD IN WAZOBIA -->
-    <div id="page-period" class="card">
-      <h3>📅 Period Tracker - Wazobia</h3>
-      <div class="lang-btns"><button class="active" onclick="switchPeriodLang('en',this)">English</button><button onclick="switchPeriodLang('pidgin',this)">Pidgin</button><button onclick="switchPeriodLang('hausa',this)">Hausa</button><button onclick="switchPeriodLang('yoruba',this)">Yoruba</button><button onclick="switchPeriodLang('igbo',this)">Igbo</button></div>
-      <div id="period-en" class="lang-block active"><p><b>How it works:</b> Enter the first day of your last period and your cycle length. We will predict your next period. Example: If last period started 1st and your cycle is 28 days, next period is around 29th.</p><p class="small">This is an estimate. Stress, sickness, or hormones can shift it. If you miss a period and you are worried, speak to a health professional.</p></div>
-      <div id="period-pidgin" class="lang-block"><p><b>How e dey work:</b> Put the first day wey your last period start, and how many days your cycle be. We go tell you when next period go come. Example: If last period start 1st, and your cycle na 28 days, next period go be around 29th.</p><p class="small">Na estimate e be. Stress, sickness fit change am. If period no come and you dey worry, go meet doctor.</p></div>
-      <div id="period-hausa" class="lang-block"><p><b>Yadda yake aiki:</b> Saka ranar farko ta al'adar da ta gabata da tsawon zagayowar ki. Za mu gaya miki lokacin da al'ada ta gaba za ta zo. Misali: Idan al'ada ta gabata ta fara ranar 1, kuma zagayowar ki kwana 28 ne, al'ada ta gaba za ta zo kusan ranar 29.</p><p class="small">Kiyasin ne. Damuwa, rashin lafiya na iya canza shi. Idan al'ada ba ta zo ba kuma kina damuwa, ki je wurin likita.</p></div>
-      <div id="period-yoruba" class="lang-block"><p><b>Bi o ṣe n ṣiṣẹ:</b> Fi ọjọ akọkọ ti nkan oṣu to kẹhin rẹ bẹrẹ ati iye ọjọ ti nkan oṣu rẹ n gba. A o sọ fun ọ nigba ti nkan oṣu to nbọ yoo de. Apeere: Ti nkan oṣu to kẹhin ba bẹrẹ ni ọjọ 1st, ti iyipo rẹ jẹ ọjọ 28, nkan oṣu to nbọ yoo jẹ ni ayika ọjọ 29th.</p><p class="small">Ifoju ni. Wahala, aisan le yi i pada. Ti nkan oṣu ko ba de ti o ba n ṣe aniyan, lọ sọdọ dokita.</p></div>
-      <div id="period-igbo" class="lang-block"><p><b>Otu o si arụ ọrụ:</b> Tinye ụbọchị mbụ nke nsọ ikpeazụ gị na ogologo okirikiri gị. Anyị ga-agwa gị mgbe nsọ ọzọ ga-abịa. Ọmụmaatụ: Ọ bụrụ na nsọ ikpeazụ malitere na 1st, na okirikiri gị bụ ụbọchị 28, nsọ ọzọ ga-abịa na gburugburu 29th.</p><p class="small">Ntule bụ ya. Nchegbu, ọrịa nwere ike ịgbanwe ya. Ọ bụrụ na nsọ abịaghị ma ị na-echegbu onwe gị, gaa hụ dọkịta.</p></div>
-      <label>Last Period Start Date</label><input type="date" id="periodDate"><label>Cycle Length (days)</label><input type="number" id="cycleLen" value="28"><button onclick="savePeriod()">Save & Predict</button><p id="periodResult"></p>
+    <div id="tab-check" class="tab-page">
+      <div class="card"><h3>🩷 Breast Self-Examination</h3><p class="small">Last check: <span id="lastBreast">Never</span></p><button onclick="showPage('breast')">Do Monthly Check</button><button class="secondary" style="margin-top:8px" onclick="showPage('demo')">▶ Watch How To Check - 5 Steps Animation</button><button class="secondary" style="margin-top:8px" onclick="showPage('learn')">📖 Learn More</button><button class="secondary" style="margin-top:8px" onclick="showPage('wazobia')">🌍 Wazobia - Pidgin / Hausa / Yoruba / Igbo</button></div>
+      <div id="page-breast" class="card"><h3>🩷 Breast Self-Exam Log</h3><p class="small">Check 3 days after period. This does NOT diagnose cancer.</p><select id="breastSide"><option>Left Breast</option><option>Right Breast</option><option>Both</option></select><select id="breastLump"><option value="No">No lump felt</option><option value="Yes">Yes - I felt a lump</option></select><input id="breastNote" placeholder="Note: e.g. Pea size, upper side, painless"><button onclick="saveBreast()">Save Check</button><p id="breastResult"></p></div>
+      <div id="page-demo" class="card">
+        <h3>🩷 How To Examine Your Breasts - Animation Demo</h3>
+        <p class="small">Pure code animation - no image files needed. For education only. It does not diagnose cancer.</p>
+        <p><b id="demoCounter">Stage 1 of 5</b> • <span class="small" id="demoHint">Watch the animation</span></p>
+        <div class="progress-bar"><div id="demoProgress" class="progress-fill" style="width:20%"></div></div>
+        <div class="demo-stage active" id="stage1"><div class="anim-stage"><div class="spark" style="top:20px;left:30px"></div><div class="spark" style="top:28px;right:36px;animation-delay:.4s"></div><div class="cal"><div class="cal-top">CHECK DAY ♥</div><div class="cal-dot"></div><div class="cal-text">Choose a regular time</div></div></div><h3>Stage 1: Get Ready</h3><p>Choose a regular time, such as when you shower. If you have periods, a few days after your period ends may be more comfortable. Goal is to know what is <b>usual for you</b>.</p><div class="checklist"><label><input type="checkbox"> I have chosen a comfortable time</label></div></div>
+        <div class="demo-stage" id="stage2"><div class="anim-stage"><div class="mirror"></div><div class="fig stage2-fig"><div class="fig-hair"></div><div class="fig-head"></div><div class="fig-arm left"></div><div class="fig-arm right"></div><div class="fig-body"></div><div class="fig-breast left"></div><div class="fig-breast right"></div><div class="fig-leg left"></div><div class="fig-leg right"></div></div><div class="anim-label">Arms relaxed → Arms raised • Look in mirror</div></div><h3>Stage 2: Look in a Mirror</h3><p>First with arms relaxed, then raise both arms. Look for a <b>new</b> change in size or shape, skin dimpling, or change around nipple.</p><div class="checklist"><label><input type="checkbox"> I looked with arms down</label><label><input type="checkbox"> I looked with arms raised</label></div></div>
+        <div class="demo-stage" id="stage3"><div class="anim-stage"><div class="breast-scan"><div class="scan-ring"></div><div class="dot-trail" style="top:22px;left:68px"></div><div class="dot-trail" style="bottom:22px;left:68px"></div><div class="dot-trail" style="top:68px;left:22px"></div><div class="dot-trail" style="top:68px;right:22px"></div><div class="finger"></div></div><div class="anim-label">Small circles • Light then firmer • Whole breast + armpit</div></div><h3>Stage 3: Feel - Small Circles</h3><p>Use <b>pads of fingers</b> to make small circles. Cover <b>whole breast</b>, around nipple, up to collarbone, and into <b>armpit</b>. Light then firmer. Do not press so hard it hurts.</p><div class="checklist"><label><input type="checkbox"> I checked left breast + armpit</label><label><input type="checkbox"> I checked right breast + armpit</label></div></div>
+        <div class="demo-stage" id="stage4"><div class="anim-stage"><div style="position:relative"><div class="magnify"><div class="mag-dot"></div><div class="magnify-handle"></div></div></div><div class="alert-bubble">NEW? ⚠️</div><div class="anim-label">Look for what is NEW for you</div></div><h3>Stage 4: Notice What Is New</h3><p>New lump, thickening, swelling, nipple turned inward, unexpected discharge, rash, or pain that persists.</p><div class="warn-box"><b>Remember:</b> Most lumps are NOT cancer. Only a clinician can tell what caused a change.</div><div class="checklist"><label><input type="checkbox"> I noticed if anything is new for me</label></div></div>
+        <div class="demo-stage" id="stage5"><div class="anim-stage"><div style="display:flex;align-items:center;gap:14px"><div class="phone"></div><div class="arrow-flow">→ →</div><div class="clinic">🏥<small>BREAST<br>CLINIC</small></div></div><div class="anim-label">Don't wait • Go promptly • Even if painless</div></div><h3>Stage 5: Get Checked Promptly</h3><p>Contact a health professional or breast clinic <b>as soon as you notice a change</b>, even if painless. Do not wait for next check or risk score.</p><div class="checklist"><label><input type="checkbox"> I understand to seek care promptly</label></div></div>
+        <div class="demo-nav"><button class="secondary" id="prevBtn" onclick="changeDemo(-1)">← Previous</button><button id="nextBtn" onclick="changeDemo(1)">Next →</button></div>
+        <button class="secondary" style="margin-top:8px" onclick="showPage('wazobia')">🌍 See This In Pidgin / Hausa / Yoruba / Igbo</button>
+      </div>
+      <div id="page-wazobia" class="card">
+        <h3>🌍 Wazobia - Check Your Breast In Your Language</h3>
+        <div class="lang-btns"><button class="active" onclick="switchLang('en',this)">English</button><button onclick="switchLang('pidgin',this)">Pidgin</button><button onclick="switchLang('hausa',this)">Hausa</button><button onclick="switchLang('yoruba',this)">Yoruba</button><button onclick="switchLang('igbo',this)">Igbo</button></div>
+        <div id="lang-en" class="lang-block active"><h4>How To Check - 5 Steps</h4><p><b>1. Get Ready:</b> Choose a regular time, like when you shower. If you have periods, a few days after your period ends may be more comfortable.</p><p><b>2. Look in Mirror:</b> Arms relaxed, then raised. Look for change in size, shape, skin dimpling, or change around nipple.</p><p><b>3. Feel:</b> Use pads of fingers, small circles. Cover whole breast, around nipple, up to collarbone, into armpit. Light then firmer.</p><p><b>4. Notice What Is New:</b> New lump, thickening, swelling, nipple turned inward, unexpected discharge, rash, persistent pain.</p><p><b>5. Get Checked Promptly:</b> See a health professional, even if painless. Don't wait for next check.</p><div class="warn-box"><b>Go to clinic quickly if you see:</b> New lump, change in size/shape, skin dimpling, nipple turned inward, discharge, rash, or pain that persists.</div></div>
+        <div id="lang-pidgin" class="lang-block"><h4>How To Examine Your Breast - 5 Steps (Pidgin)</h4><p><b>1. Ready:</b> Choose time wey you dey comfortable, like when you dey bath. If you dey see period, check few days after period finish.</p><p><b>2. Look for Mirror:</b> First put hand down, after raise am up. Look your two breasts well.</p><p><b>3. Touch Am:</b> Use finger tip, do small circle-circle. Touch everywhere — whole breast, around nipple, reach collarbone, enter armpit. Start soft, after press small small.</p><p><b>4. Notice Wetin New:</b> New lump, thick place, swelling, nipple wey don enter inside, water wey dey comot, rash, or pain wey no dey go.</p><p><b>5. Go Hospital Sharp-Sharp:</b> Go meet doctor, even if e no dey pain you. No wait till next check.</p><div class="warn-box"><b>Run go clinic quick if you see:</b> New lump, breast don big or small, skin don change, nipple don enter inside, water dey comot, rash, or pain wey no gree go.</div></div>
+        <div id="lang-hausa" class="lang-block"><h4>Yadda Ake Duba Nono - Matakai 5 (Hausa)</h4><p><b>1. Shirya:</b> Zabi lokaci da ya dace, kamar lokacin wanka. Idan kina ganin al'ada, ki duba kwanaki kadan bayan al'ada ta kare.</p><p><b>2. Duba A Madubi:</b> Da farko sa hannuwanki a kasa, sannan ki daga su sama. Ki duba nononki biyu.</p><p><b>3. Taba:</b> Ki yi amfani da yatsun hannu, ki yi karamar zagaye. Ki taba duk nono, kewaye da kan nono, har zuwa kashin wuya, da cikin hammata.</p><p><b>4. Lura Da Abin Da Ya Sabo:</b> Sabon kumburi, kauri, kumburi, kan nono da ya shiga ciki, ruwa da ba a zata ba, kuraje, ko ciwo da bai tafi ba.</p><p><b>5. Ki Je Asibiti Da Sauri:</b> Ki je wurin likita, ko da kumburin ba ya ciwo. Kada ki jira.</p><div class="warn-box"><b>Ki je asibiti da sauri idan kin ga:</b> Sabon kumburi, canjin girma, fatar ta canza, kan nono ya shiga ciki, ruwa ya fito, kuraje, ko ciwo da bai tafi ba.</div></div>
+        <div id="lang-yoruba" class="lang-block"><h4>Bi O Se Le Se Ayẹwo Ọmu Rẹ - Igbesẹ 5 (Yoruba)</h4><p><b>1. Mura:</b> Yan akoko ti o baamu, bii nigba ti o ba n wẹ. Ti o ba n ri nkan oṣu, ṣayẹwo ni ọjọ diẹ lẹhin ti nkan oṣu ba pari.</p><p><b>2. Wo Ninu Digii:</b> Kọkọ fi ọwọ rẹ silẹ, lẹhin na gbe wọn soke. Wo ọmu rẹ mejeeji.</p><p><b>3. Fọwọkan:</b> Lo ika ọwọ rẹ, ṣe iyika kekere. Fọwọkan gbogbo ọmu, yika ori ọmu, de egungun ọrun, ati sinu abẹ́ ọwọ.</p><p><b>4. Kiyesi Ohun Tuntun:</b> Iṣu tuntun, ibi ti o nipọn, wiwu, ori ọmu ti o ti wọle, omi ti ko yẹ, sisu, tabi irora ti ko lọ.</p><p><b>5. Lọ Si Ile-Iwosan Ni Kiakia:</b> Lọ sọdọ dokita, paapaa ti iṣu na ko ba dun ọ. Maṣe duro.</p><div class="warn-box"><b>Lọ si ile-iwosan ni kiakia ti o ba ri:</b> Iṣu tuntun, iyipada iwọn, iyipada awọ ara, ori ọmu ti wọle, omi ti n jade, sisu, tabi irora ti ko lọ.</div></div>
+        <div id="lang-igbo" class="lang-block"><h4>Otu Esi Elele Ara Gi - Nzọụkwụ 5 (Igbo)</h4><p><b>1. Kwadebe:</b> Họrọ oge dị gị mma, dịka mgbe ị na-asa ahụ. Ọ bụrụ na ị na-ahụ nsọ, lelee ụbọchị ole na ole mgbe nsọ gwụchara.</p><p><b>2. Lee Na Enyo:</b> Buru ụzọ tinye aka gị ala, emesia welie ha elu. Lee ara gị abụọ.</p><p><b>3. Metụ Aka:</b> Jiri mkpịsị aka gị, mee obere okirikiri. Metụ ara niile, gburugburu ọnụ ara, ruo ọkpụkpụ olu, na n'ime ogwe aka.</p><p><b>4. Mara Ihe Ọhụrụ:</b> Ọkpụkpụ ọhụrụ, ebe gbara ọkpụrụkpụ, ọzịza, ọnụ ara batara n'ime, mmiri na-apụta, ọkụ ọkụ, ma ọ bụ mgbu na-adịghị apụ.</p><p><b>5. Gaa Ụlọ Ọgwụ Ngwa Ngwa:</b> Gaa hụ dọkịta, ọbụna ma ọ bụrụ na ọkpụkpụ ahụ anaghị afụ ụfụ. Echela.</p><div class="warn-box"><b>Gaa ụlọ ọgwụ ngwa ngwa ọ bụrụ na ị hụ:</b> Ọkpụkpụ ọhụrụ, mgbanwe nha, mgbanwe akpụkpọ ahụ, ọnụ ara batara n'ime, mmiri na-apụta, ọkụ ọkụ, ma ọ bụ mgbu na-adịghị apụ.</div></div>
+        <button onclick="showPage('demo')">▶ Go To Animation Demo</button>
+      </div>
     </div>
 
-    <!-- WEIGHT -->
-    <div id="page-weight" class="card">
-      <h3>⚖️ Weight & BMI - Naija Converter</h3>
-      <p class="small">Type what you know. App will convert for you. Hospitals use <b>kg</b> and <b>cm</b>, but many people say <b>lbs</b> and <b>feet/inches</b>.</p>
-      <label>Weight Unit</label><select id="weightUnit" onchange="toggleWeightUnit()"><option value="kg">Kilogram (kg) - Hospital scale</option><option value="lbs">Pounds (lbs) - US / Gym scale</option></select>
-      <input type="number" id="weightInput" placeholder="Weight e.g. 72 (kg) or 158 (lbs)">
-      <label>Height Unit</label><select id="heightUnit" onchange="toggleHeightUnit()"><option value="cm">Centimetres (cm) - Hospital</option><option value="ft">Feet + Inches (ft/in)</option></select>
-      <div id="heightCmBox"><input type="number" id="heightInput" placeholder="Height (cm) e.g. 165"></div>
-      <div id="heightFtBox" class="hidden"><div class="row2"><input type="number" id="heightFeet" placeholder="Feet e.g. 5"><input type="number" id="heightInches" placeholder="Inches e.g. 4"></div><p class="small">Example: 5'4" = 163 cm</p></div>
-      <label>Naija Food (optional)</label><select id="naijaFood"><option value="350">Jollof Rice - 1 Cup (350 cal)</option><option value="300">Eba - 1 Wrap (300 cal)</option><option value="280">Amala + Ewedu (280 cal)</option><option value="450">Fried Rice + Chicken (450 cal)</option><option value="200">Pepper Soup (200 cal)</option></select>
-      <button onclick="saveWeight()">Calculate BMI & Log Weight</button><p id="weightResult"></p><div id="conversionResult" class="info-box hidden"></div>
-      <details><summary>📏 Quick Conversion Table</summary><p><b>Height:</b> 5'0" = 152cm, 5'2" = 158cm, 5'4" = 163cm, 5'6" = 168cm, 5'8" = 173cm, 5'10" = 178cm, 6'0" = 183cm</p><p><b>Weight:</b> 120 lbs = 54.4kg, 140 lbs = 63.5kg, 160 lbs = 72.6kg, 180 lbs = 81.6kg, 200 lbs = 90.7kg</p><p><b>Formula:</b> BMI = Weight (kg) ÷ [Height (m) x Height (m)]</p></details>
+    <div id="tab-learn" class="tab-page">
+      <div id="page-learn" class="card"><h3>📖 What You Need To Know</h3><h4>🚨 Get checked promptly if you notice:</h4><ul style="font-size:14px;line-height:1.7"><li>New lump, thickening, swelling in breast or armpit</li><li>Change in size or shape</li><li>Skin dimpling, thickening, rash around nipple</li><li>Nipple turned inward</li><li>Unexpected discharge</li><li>Pain that persists</li></ul><div class="info-box">Even if painless, get it checked. You do <b>not</b> need a risk score first.</div><button onclick="showPage('wazobia')">🌍 See This In Pidgin / Hausa / Yoruba / Igbo</button></div>
+      <div class="card"><h3>💡 Why Early Detection Matters</h3><div class="fact-grid"><div class="fact"><b>44,196</b><span>New cases in Nigeria in 2024</span></div><div class="fact"><b>49.3%</b><span>Of new cancers among women</span></div><div class="fact"><b>21,309</b><span>Deaths in Nigeria in 2024</span></div><div class="fact"><b>27%</b><span>Had early stage (I or II) in ABC-DO study</span></div></div><div class="info-box"><b>What this means:</b> Many women are diagnosed late. Finding a change early and getting it checked promptly gives more treatment options.</div></div>
     </div>
 
-    <div id="page-steps" class="card"><h3>👟 Pedometer</h3><p>Goal: 7,000 steps</p><h2 style="text-align:center;color:#D6336C" id="stepsCount">0 steps</h2><div style="background:#F1D5E0;height:10px;border-radius:20px;overflow:hidden"><div id="stepsBar" style="background:#D6336C;height:10px;width:0%"></div></div><br><button onclick="addSteps()">+ Add 500 Steps (Simulate Walk)</button><button class="secondary" onclick="startPedometer()" style="margin-top:8px">Start Real Pedometer (Phone Sensor)</button></div>
-
-    <!-- DEMO ANIMATION -->
-    <div id="page-demo" class="card">
-      <h3>🩷 How To Check Your Breasts - Animation Demo</h3>
-      <p class="small">Pure code animation - no image files needed. For education only. It does not diagnose cancer.</p>
-      <p><b id="demoCounter">Stage 1 of 5</b> • <span class="small" id="demoHint">Watch the animation</span></p>
-      <div class="progress-bar"><div id="demoProgress" class="progress-fill" style="width:20%"></div></div>
-      <div class="demo-stage active" id="stage1"><div class="anim-stage"><div class="spark" style="top:20px;left:30px"></div><div class="spark" style="top:28px;right:36px;animation-delay:.4s"></div><div class="cal"><div class="cal-top">CHECK DAY ♥</div><div class="cal-dot"></div><div class="cal-text">Choose a regular time</div></div></div><h3>Stage 1: Get Ready</h3><p>Choose a regular time, such as when you shower. If you have periods, a few days after your period ends may be more comfortable. Goal is to know what is <b>usual for you</b>.</p><div class="checklist"><label><input type="checkbox"> I have chosen a comfortable time</label></div></div>
-      <div class="demo-stage" id="stage2"><div class="anim-stage"><div class="mirror"></div><div class="fig stage2-fig"><div class="fig-hair"></div><div class="fig-head"></div><div class="fig-arm left"></div><div class="fig-arm right"></div><div class="fig-body"></div><div class="fig-breast left"></div><div class="fig-breast right"></div><div class="fig-leg left"></div><div class="fig-leg right"></div></div><div class="anim-label">Arms relaxed → Arms raised • Look in mirror</div></div><h3>Stage 2: Look in a Mirror</h3><p>First with arms relaxed, then raise both arms. Look for a <b>new</b> change in size or shape, skin dimpling, or change around nipple.</p><div class="checklist"><label><input type="checkbox"> I looked with arms down</label><label><input type="checkbox"> I looked with arms raised</label></div></div>
-      <div class="demo-stage" id="stage3"><div class="anim-stage"><div class="breast-scan"><div class="scan-ring"></div><div class="dot-trail" style="top:22px;left:68px"></div><div class="dot-trail" style="bottom:22px;left:68px"></div><div class="dot-trail" style="top:68px;left:22px"></div><div class="dot-trail" style="top:68px;right:22px"></div><div class="finger"></div></div><div class="anim-label">Small circles • Light then firmer • Whole breast + armpit</div></div><h3>Stage 3: Feel - Small Circles</h3><p>Use <b>pads of fingers</b> to make small circles. Cover <b>whole breast</b>, around nipple, up to collarbone, and into <b>armpit</b>. Light then firmer. Do not press so hard it hurts.</p><div class="checklist"><label><input type="checkbox"> I checked left breast + armpit</label><label><input type="checkbox"> I checked right breast + armpit</label></div></div>
-      <div class="demo-stage" id="stage4"><div class="anim-stage"><div style="position:relative"><div class="magnify"><div class="mag-dot"></div><div class="magnify-handle"></div></div></div><div class="alert-bubble">NEW? ⚠️</div><div class="anim-label">Look for what is NEW for you</div></div><h3>Stage 4: Notice What Is New</h3><p>New lump, thickening, swelling, nipple turned inward, unexpected discharge, rash, or pain that persists.</p><div class="warn-box"><b>Remember:</b> Most lumps are NOT cancer. Only a clinician can tell what caused a change.</div><div class="checklist"><label><input type="checkbox"> I noticed if anything is new for me</label></div></div>
-      <div class="demo-stage" id="stage5"><div class="anim-stage"><div style="display:flex;align-items:center;gap:14px"><div class="phone"></div><div class="arrow-flow">→ →</div><div class="clinic">🏥<small>BREAST<br>CLINIC</small></div></div><div class="anim-label">Don't wait • Go promptly • Even if painless</div></div><h3>Stage 5: Get Checked Promptly</h3><p>Contact a health professional or breast clinic <b>as soon as you notice a change</b>, even if painless. Do not wait for next check or risk score.</p><div class="checklist"><label><input type="checkbox"> I understand to seek care promptly</label></div></div>
-      <div class="demo-nav"><button class="secondary" id="prevBtn" onclick="changeDemo(-1)">← Previous</button><button id="nextBtn" onclick="changeDemo(1)">Next →</button></div>
-      <button class="secondary" style="margin-top:8px" onclick="showPage('wazobia')">🌍 See This In Pidgin / Hausa / Yoruba / Igbo</button>
+    <div id="tab-track" class="tab-page">
+      <div id="page-period" class="card">
+        <h3>📅 Period Tracker - Wazobia</h3>
+        <div class="lang-btns"><button class="active" onclick="switchPeriodLang('en',this)">English</button><button onclick="switchPeriodLang('pidgin',this)">Pidgin</button><button onclick="switchPeriodLang('hausa',this)">Hausa</button><button onclick="switchPeriodLang('yoruba',this)">Yoruba</button><button onclick="switchPeriodLang('igbo',this)">Igbo</button></div>
+        <div id="period-en" class="lang-block active"><p><b>How it works:</b> Enter the first day of your last period and your cycle length. We will predict your next period. Example: If last period started 1st and your cycle is 28 days, next period is around 29th.</p><p class="small">This is an estimate. Stress, sickness, or hormones can shift it. If you miss a period and you are worried, speak to a health professional.</p></div>
+        <div id="period-pidgin" class="lang-block"><p><b>How e dey work:</b> Put the first day wey your last period start, and how many days your cycle be. We go tell you when next period go come. Example: If last period start 1st, and your cycle na 28 days, next period go be around 29th.</p><p class="small">Na estimate e be. Stress, sickness fit change am. If period no come and you dey worry, go meet doctor.</p></div>
+        <div id="period-hausa" class="lang-block"><p><b>Yadda yake aiki:</b> Saka ranar farko ta al'adar da ta gabata da tsawon zagayowar ki. Za mu gaya miki lokacin da al'ada ta gaba za ta zo. Misali: Idan al'ada ta gabata ta fara ranar 1, kuma zagayowar ki kwana 28 ne, al'ada ta gaba za ta zo kusan ranar 29.</p><p class="small">Kiyasin ne. Damuwa, rashin lafiya na iya canza shi. Idan al'ada ba ta zo ba kuma kina damuwa, ki je wurin likita.</p></div>
+        <div id="period-yoruba" class="lang-block"><p><b>Bi o ṣe n ṣiṣẹ:</b> Fi ọjọ akọkọ ti nkan oṣu to kẹhin rẹ bẹrẹ ati iye ọjọ ti nkan oṣu rẹ n gba. A o sọ fun ọ nigba ti nkan oṣu to nbọ yoo de. Apeere: Ti nkan oṣu to kẹhin ba bẹrẹ ni ọjọ 1st, ti iyipo rẹ jẹ ọjọ 28, nkan oṣu to nbọ yoo jẹ ni ayika ọjọ 29th.</p><p class="small">Ifoju ni. Wahala, aisan le yi i pada. Ti nkan oṣu ko ba de ti o ba n ṣe aniyan, lọ sọdọ dokita.</p></div>
+        <div id="period-igbo" class="lang-block"><p><b>Otu o si arụ ọrụ:</b> Tinye ụbọchị mbụ nke nsọ ikpeazụ gị na ogologo okirikiri gị. Anyị ga-agwa gị mgbe nsọ ọzọ ga-abịa. Ọmụmaatụ: Ọ bụrụ na nsọ ikpeazụ malitere na 1st, na okirikiri gị bụ ụbọchị 28, nsọ ọzọ ga-abịa na gburugburu 29th.</p><p class="small">Ntule bụ ya. Nchegbu, ọrịa nwere ike ịgbanwe ya. Ọ bụrụ na nsọ abịaghị ma ị na-echegbu onwe gị, gaa hụ dọkịta.</p></div>
+        <label>Last Period Start Date</label><input type="date" id="periodDate"><label>Cycle Length (days)</label><input type="number" id="cycleLen" value="28"><button onclick="savePeriod()">Save & Predict</button><p id="periodResult"></p>
+      </div>
+      <div id="page-weight" class="card">
+        <h3>⚖️ BMI - Calculator</h3>
+        <p class="small">Type what you know. App will convert for you. Hospitals use <b>kg</b> and <b>cm</b>, but many people say <b>lbs</b> and <b>feet/inches</b>.</p>
+        <label>Weight Unit</label><select id="weightUnit" onchange="toggleWeightUnit()"><option value="kg">Kilogram (kg) - Hospital scale</option><option value="lbs">Pounds (lbs) - US / Gym scale</option></select>
+        <input type="number" id="weightInput" placeholder="Weight e.g. 72 (kg) or 158 (lbs)">
+        <label>Height Unit</label><select id="heightUnit" onchange="toggleHeightUnit()"><option value="cm">Centimetres (cm) - Hospital</option><option value="ft">Feet + Inches (ft/in)</option></select>
+        <div id="heightCmBox"><input type="number" id="heightInput" placeholder="Height (cm) e.g. 165"></div>
+        <div id="heightFtBox" class="hidden"><div class="row2"><input type="number" id="heightFeet" placeholder="Feet e.g. 5"><input type="number" id="heightInches" placeholder="Inches e.g. 4"></div><p class="small">Example: 5'4" = 163 cm</p></div>
+        <button onclick="saveWeight()">Calculate BMI & Log Weight</button><p id="weightResult"></p><div id="conversionResult" class="info-box hidden"></div>
+        <details><summary>📏 Quick Conversion Table</summary><p><b>Height:</b> 5'0" = 152cm, 5'2" = 158cm, 5'4" = 163cm, 5'6" = 168cm, 5'8" = 173cm, 5'10" = 178cm, 6'0" = 183cm</p><p><b>Weight:</b> 120 lbs = 54.4kg, 140 lbs = 63.5kg, 160 lbs = 72.6kg, 180 lbs = 81.6kg, 200 lbs = 90.7kg</p><p><b>Formula:</b> BMI = Weight (kg) ÷ [Height (m) x Height (m)]</p></details>
+      </div>
+      <div id="page-steps" class="card"><h3>👟 Pedometer</h3><p>Goal: 7,000 steps</p><h2 style="text-align:center;color:#D6336C" id="stepsCount">0 steps</h2><div style="background:#F1D5E0;height:10px;border-radius:20px;overflow:hidden"><div id="stepsBar" style="background:#D6336C;height:10px;width:0%"></div></div><br><button onclick="addSteps()">+ Add 500 Steps (Simulate Walk)</button><button class="secondary" onclick="startPedometer()" style="margin-top:8px">Start Real Pedometer (Phone Sensor)</button></div>
     </div>
 
-    <div id="page-breast" class="card"><h3>🩷 Breast Self-Exam Log</h3><p class="small">Check 3 days after period. This does NOT diagnose cancer.</p><select id="breastSide"><option>Left Breast</option><option>Right Breast</option><option>Both</option></select><select id="breastLump"><option value="No">No lump felt</option><option value="Yes">Yes - I felt a lump</option></select><input id="breastNote" placeholder="Note: e.g. Pea size, upper side, painless"><button onclick="saveBreast()">Save Check</button><p id="breastResult"></p></div>
-    <div id="page-learn" class="card"><h3>📖 What You Need To Know</h3><h4>🚨 Get checked promptly if you notice:</h4><ul style="font-size:14px;line-height:1.7"><li>New lump, thickening, swelling in breast or armpit</li><li>Change in size or shape</li><li>Skin dimpling, thickening, rash around nipple</li><li>Nipple turned inward</li><li>Unexpected discharge</li><li>Pain that persists</li></ul><div class="info-box">Even if painless, get it checked. You do <b>not</b> need a risk score first.</div><button onclick="showPage('wazobia')">🌍 See This In Pidgin / Hausa / Yoruba / Igbo</button></div>
-
-    <!-- CERVICAL IN WAZOBIA -->
-    <div id="page-cervical" class="card">
-      <h3>🩺 Cervical Cancer Risk Check - Wazobia</h3>
-      <p class="small" id="cervicalIntro">For education only. Not a diagnosis. Answer 4 questions to see if you should book a Pap Smear.</p>
-      <div class="lang-btns"><button class="active" onclick="switchCervicalLang('en',this)">English</button><button onclick="switchCervicalLang('pidgin',this)">Pidgin</button><button onclick="switchCervicalLang('hausa',this)">Hausa</button><button onclick="switchCervicalLang('yoruba',this)">Yoruba</button><button onclick="switchCervicalLang('igbo',this)">Igbo</button></div>
-      <div id="cervical-en" class="lang-block active"><p><b>What is Pap Smear?</b> A test where a health worker checks cells from the cervix (mouth of womb) to find changes early, before cancer develops. It is quick and can save life.</p></div>
-      <div id="cervical-pidgin" class="lang-block"><p><b>Wetin be Pap Smear?</b> Na test wey health worker go check cells from cervix (mouth of womb) to find wahala early, before e turn cancer. E dey quick and e fit save life.</p></div>
-      <div id="cervical-hausa" class="lang-block"><p><b>Menene Pap Smear?</b> Gwaji ne da ma'aikacin lafiya ke duba seloli daga cervix (bakin mahaifa) don gano canji da wuri, kafin ya zama ciwon daji. Gwaji ne mai sauki kuma zai iya ceton rai.</p></div>
-      <div id="cervical-yoruba" class="lang-block"><p><b>Kini Pap Smear?</b> Idanwo ni ti oṣiṣẹ ilera n ṣayẹwo awọn sẹẹli lati inu cervix (ẹnu ile-ọmọ) lati wa iyipada ni kutukutu, ṣaaju ki o to di aarun jejere. O yara ati o le gba ẹmi là.</p></div>
-      <div id="cervical-igbo" class="lang-block"><p><b>Gịnị bụ Pap Smear?</b> Nnwale ebe onye ọrụ ahụike na-enyocha mkpụrụ ndụ site na cervix (ọnụ akpa nwa) ịchọta mgbanwe n'oge, tupu ọ ghọọ ọrịa kansa. Ọ dị ngwa ngwa ma nwee ike ịzọpụta ndụ.</p></div>
-      <label id="cervQ1Label">Have you had HPV Vaccine?</label><select id="q1"><option value="0">Yes</option><option value="1">No</option><option value="1">Not sure</option></select>
-      <label id="cervQ2Label">Bleeding after sex?</label><select id="q2"><option value="0">No</option><option value="2">Yes, sometimes</option><option value="3">Yes, often</option></select>
-      <label id="cervQ3Label">Unusual discharge?</label><select id="q3"><option value="0">No</option><option value="2">Yes</option></select>
-      <label id="cervQ4Label">Pelvic pain?</label><select id="q4"><option value="0">No</option><option value="1">Sometimes</option><option value="2">Often</option></select>
-      <button id="cervicalBtn" onclick="checkCervical()">See My Risk</button><p id="cervicalResult"></p>
-      <div class="info-box" id="cervicalNote">This is for education only. If you have bleeding after sex, unusual discharge, or persistent pelvic pain, speak to a health professional promptly, even if your score is Low.</div>
-      <div id="hospitalList" class="hidden"><b>Where to do Pap Smear in Lagos:</b><br>• LUTH - Idi Araba - ~N20,000<br>• LASUTH - Ikeja - ~N18,000<br>• Duchess Hospital - Ikeja - ~N35,000<br>• Reddington - Lekki - ~N40,000</div>
+    <div id="tab-cervical" class="tab-page">
+      <div id="page-cervical" class="card">
+        <h3>🩺 Cervical Cancer Risk Examination - Wazobia</h3>
+        <p class="small" id="cervicalIntro">For education only. Not a diagnosis. Answer 4 questions to see if you should book a Pap Smear.</p>
+        <div class="lang-btns"><button class="active" onclick="switchCervicalLang('en',this)">English</button><button onclick="switchCervicalLang('pidgin',this)">Pidgin</button><button onclick="switchCervicalLang('hausa',this)">Hausa</button><button onclick="switchCervicalLang('yoruba',this)">Yoruba</button><button onclick="switchCervicalLang('igbo',this)">Igbo</button></div>
+        <div id="cervical-en" class="lang-block active"><p><b>What is Pap Smear?</b> A test where a health worker checks cells from the cervix (mouth of womb) to find changes early, before cancer develops. It is quick and can save life.</p></div>
+        <div id="cervical-pidgin" class="lang-block"><p><b>Wetin be Pap Smear?</b> Na test wey health worker go check cells from cervix (mouth of womb) to find wahala early, before e turn cancer. E dey quick and e fit save life.</p></div>
+        <div id="cervical-hausa" class="lang-block"><p><b>Menene Pap Smear?</b> Gwaji ne da ma'aikacin lafiya ke duba seloli daga cervix (bakin mahaifa) don gano canji da wuri, kafin ya zama ciwon daji. Gwaji ne mai sauki kuma zai iya ceton rai.</p></div>
+        <div id="cervical-yoruba" class="lang-block"><p><b>Kini Pap Smear?</b> Idanwo ni ti oṣiṣẹ ilera n ṣayẹwo awọn sẹẹli lati inu cervix (ẹnu ile-ọmọ) lati wa iyipada ni kutukutu, ṣaaju ki o to di aarun jejere. O yara ati o le gba ẹmi là.</p></div>
+        <div id="cervical-igbo" class="lang-block"><p><b>Gịnị bụ Pap Smear?</b> Nnwale ebe onye ọrụ ahụike na-enyocha mkpụrụ ndụ site na cervix (ọnụ akpa nwa) ịchọta mgbanwe n'oge, tupu ọ ghọọ ọrịa kansa. Ọ dị ngwa ngwa ma nwee ike ịzọpụta ndụ.</p></div>
+        <label id="cervQ1Label">Have you had HPV Vaccine?</label><select id="q1"><option value="0">Yes</option><option value="1">No</option><option value="1">Not sure</option></select>
+        <label id="cervQ2Label">Bleeding after sex?</label><select id="q2"><option value="0">No</option><option value="2">Yes, sometimes</option><option value="3">Yes, often</option></select>
+        <label id="cervQ3Label">Unusual discharge?</label><select id="q3"><option value="0">No</option><option value="2">Yes</option></select>
+        <label id="cervQ4Label">Pelvic pain?</label><select id="q4"><option value="0">No</option><option value="1">Sometimes</option><option value="2">Often</option></select>
+        <button id="cervicalBtn" onclick="checkCervical()">See My Risk</button><p id="cervicalResult"></p>
+        <div class="info-box" id="cervicalNote">This is for education only. If you have bleeding after sex, unusual discharge, or persistent pelvic pain, speak to a health professional promptly, even if your score is Low.</div>
+        <div id="hospitalList" class="hidden"><b>Where to do Pap Smear in Lagos:</b><br>• LUTH - Idi Araba - ~N20,000<br>• LASUTH - Ikeja - ~N18,000<br>• Duchess Hospital - Ikeja - ~N35,000<br>• Reddington - Lekki - ~N40,000</div>
+      </div>
     </div>
+
+    <div id="tab-profile" class="tab-page">
+      <div class="card" style="text-align:center">
+        <div class="profile-avatar" id="profileAvatar">A</div>
+        <h3 id="profileName" style="margin-bottom:4px">Ada Okafor</h3>
+        <p class="small" id="profileEmail" style="margin:0">demo@antonella.ng</p>
+        <span class="badge green" style="margin-top:10px">✓ Active Account</span>
+      </div>
+      <div class="card">
+        <h3>My Details</h3>
+        <div class="profile-row"><b>Full Name</b><span id="profileName2">Ada Okafor</span></div>
+        <div class="profile-row"><b>Email / Phone</b><span id="profileEmail2">demo@antonella.ng</span></div>
+        <div class="profile-row"><b>State</b><span id="profileState">Lagos</span></div>
+        <div class="profile-row"><b>Last Breast Check</b><span id="profileLastBreast">Never</span></div>
+        <div class="profile-row"><b>Weight</b><span id="profileWeight">-- kg</span></div>
+        <div class="profile-row"><b>Steps Today</b><span id="profileSteps">0 steps</span></div>
+      </div>
+      <div class="card">
+        <h3>About Antonella</h3>
+        <p style="font-size:14px;line-height:1.6">Antonella is for education only. It does not diagnose cancer. Please see a doctor for Pap Smear, HPV test or Mammogram.</p>
+        <p class="small">Version 1.0 • Nigeria • Data saves in this browser only (Dummy Mode)</p>
+      </div>
+      <button onclick="logout()" style="background:#C92A2A">Logout</button>
+      <button class="secondary" style="margin-top:8px" onclick="if(confirm('Clear all saved data?')){localStorage.clear();location.reload()}">Clear My Data</button>
+    </div>
+
     <p class="small" style="text-align:center">Antonella is for education only. It does not diagnose cancer. Please see a doctor for Pap Smear, HPV test or Mammogram.</p>
   </div>
 </div>
+
+<!-- BOTTOM NAV - STATIC, PART OF LAYOUT, NEVER MOVES -->
+<nav class="bottom-nav">
+  <button class="active" onclick="switchTab('home', this)"><span>🏠</span>Home</button>
+  <button onclick="switchTab('check', this)"><span>🩷</span>Check</button>
+  <button onclick="switchTab('learn', this)"><span>📖</span>Learn</button>
+  <button onclick="switchTab('track', this)"><span>📅</span>Track</button>
+  <button onclick="switchTab('cervical', this)"><span>🩺</span>Cervical</button>
+  <button onclick="switchTab('profile', this)"><span>👤</span>Profile</button>
+</nav>
+
 <script>
 let user = JSON.parse(localStorage.getItem('antonella_user')||'null');
 let steps = parseInt(localStorage.getItem('antonella_steps')||'0');
@@ -195,17 +301,65 @@ let cervicalLang = 'en';
 if(user) showApp();
 function toggleAuth(){let t=document.getElementById('authTitle');t.innerText = t.innerText==='Create Account' ? 'Welcome Back - Login' : 'Create Account';}
 function signup(){let name=document.getElementById('name').value||'Ada';let email=document.getElementById('email').value||'demo@antonella.ng';user={name,email, state:document.getElementById('state').value};localStorage.setItem('antonella_user',JSON.stringify(user));showApp();}
-function showApp(){document.getElementById('authPage').classList.add('hidden');document.getElementById('appPage').classList.remove('hidden');document.getElementById('helloName').innerText='Hi, '+user.name.split(' ')[0];updateStepsUI();let w=localStorage.getItem('antonella_weight');if(w) document.getElementById('dashWeight').innerText=w;let lb=localStorage.getItem('antonella_breast');if(lb) document.getElementById('lastBreast').innerText=lb;}
+function showApp(){
+  document.getElementById('authPage').classList.add('hidden');
+  document.getElementById('appPage').classList.remove('hidden');
+  updateHeaderAndProfile();
+  updateStepsUI();
+  let w=localStorage.getItem('antonella_weight');if(w) document.getElementById('dashWeight').innerText=w;
+  let lb=localStorage.getItem('antonella_breast');if(lb) document.getElementById('lastBreast').innerText=lb;
+}
+function updateHeaderAndProfile(){
+  if(!user) return;
+  let first = user.name.split(' ')[0];
+  document.getElementById('helloName').innerText='Hi, '+first;
+  document.getElementById('helloState').innerText=(user.state||'Lagos')+', Nigeria';
+  document.getElementById('profileAvatar').innerText=user.name.charAt(0).toUpperCase();
+  document.getElementById('profileName').innerText=user.name;
+  document.getElementById('profileName2').innerText=user.name;
+  document.getElementById('profileEmail').innerText=user.email;
+  document.getElementById('profileEmail2').innerText=user.email;
+  document.getElementById('profileState').innerText=user.state||'Lagos';
+  document.getElementById('profileLastBreast').innerText=localStorage.getItem('antonella_breast')||'Never';
+  document.getElementById('profileWeight').innerText=(localStorage.getItem('antonella_weight')||'--')+' kg';
+  document.getElementById('profileSteps').innerText=steps+' steps';
+}
 function logout(){localStorage.removeItem('antonella_user');location.reload();}
-function showPage(p){document.getElementById('page-'+p).scrollIntoView({behavior:'smooth'});}
+function switchTab(tab, btn){
+  if(!user && tab!=='home'){
+    document.getElementById('authPage').classList.remove('hidden');
+    document.getElementById('appPage').classList.add('hidden');
+    document.getElementById('mainScroll').scrollTop=0;
+    document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    return;
+  }
+  document.querySelectorAll('.tab-page').forEach(el=>el.classList.remove('active'));
+  const target=document.getElementById('tab-'+tab);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else {
+    const map={home:0,check:1,learn:2,track:3,cervical:4,profile:5};
+    document.querySelectorAll('.bottom-nav button')[map[tab]].classList.add('active');
+  }
+  if(tab==='profile') updateHeaderAndProfile();
+  document.getElementById('mainScroll').scrollTop=0;
+}
+function showPage(p){
+  const map={breast:'check', demo:'check', wazobia:'check', learn:'learn', cervical:'cervical', period:'track', weight:'track', steps:'track'};
+  if(map[p]) switchTab(map[p]);
+  const el=document.getElementById('page-'+p);
+  if(el) setTimeout(()=>{ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+}
 function savePeriod(){let d=document.getElementById('periodDate').value;let cycle=parseInt(document.getElementById('cycleLen').value)||28;if(!d) return alert('Pick a date');let next=new Date(d);next.setDate(next.getDate()+cycle);document.getElementById('periodResult').innerHTML='<b>Next period:</b> '+next.toDateString()+'<br><span class="badge green">Saved in Dummy DB</span>';document.getElementById('dashPeriod').innerText=next.toDateString().slice(4,10);localStorage.setItem('antonella_period',d);}
 function toggleWeightUnit(){let u=document.getElementById('weightUnit').value;document.getElementById('weightInput').placeholder = u==='kg' ? 'Weight e.g. 72 (kg)' : 'Weight e.g. 158 (lbs)';}
 function toggleHeightUnit(){let u=document.getElementById('heightUnit').value;document.getElementById('heightCmBox').classList.toggle('hidden', u!=='cm');document.getElementById('heightFtBox').classList.toggle('hidden', u!=='ft');}
 function saveWeight(){let wRaw=parseFloat(document.getElementById('weightInput').value);let wUnit=document.getElementById('weightUnit').value;let hUnit=document.getElementById('heightUnit').value;let hCm;if(hUnit==='cm'){hCm=parseFloat(document.getElementById('heightInput').value);}else{let ft=parseFloat(document.getElementById('heightFeet').value)||0;let inch=parseFloat(document.getElementById('heightInches').value)||0;hCm=(ft*30.48)+(inch*2.54);}if(!wRaw||!hCm) return alert('Enter weight & height');let wKg=wUnit==='lbs'?wRaw/2.205:wRaw;let wLbs=wUnit==='kg'?wRaw*2.205:wRaw;let hM=hCm/100;let bmi=(wKg/(hM*hM)).toFixed(1);let cat=bmi<18.5?'Underweight':bmi<25?'Healthy':bmi<30?'Overweight':'Obese';let badge=bmi<18.5?'yellow':bmi<25?'green':bmi<30?'yellow':'red';document.getElementById('weightResult').innerHTML='BMI: <b>'+bmi+'</b> - '+cat+'<br><span class="badge '+badge+'">'+cat+'</span>';let conv=document.getElementById('conversionResult');conv.classList.remove('hidden');conv.innerHTML='<b>Converted:</b><br>Weight: '+wKg.toFixed(1)+' kg = '+wLbs.toFixed(1)+' lbs<br>Height: '+hCm.toFixed(1)+' cm<br>Formula: BMI = '+wKg.toFixed(1)+' ÷ ('+hM.toFixed(2)+' x '+hM.toFixed(2)+') = '+bmi;document.getElementById('dashWeight').innerText=wKg.toFixed(1);document.getElementById('dashBMI').innerText=bmi;localStorage.setItem('antonella_weight',wKg.toFixed(1));}
 function addSteps(){steps+=500;localStorage.setItem('antonella_steps',steps);updateStepsUI();}
-function updateStepsUI(){document.getElementById('stepsCount').innerText=steps+' steps';document.getElementById('dashSteps').innerText=steps;document.getElementById('stepsBar').style.width=Math.min(100,steps/7000*100)+'%';}
+function updateStepsUI(){document.getElementById('stepsCount').innerText=steps+' steps';document.getElementById('dashSteps').innerText=steps;document.getElementById('stepsBar').style.width=Math.min(100,steps/7000*100)+'%'; if(document.getElementById('profileSteps')) document.getElementById('profileSteps').innerText=steps+' steps';}
 function startPedometer(){alert('Pedometer sensor will work on real phone with Firebase version. For dummy, use +500 button.');}
-function saveBreast(){let lump=document.getElementById('breastLump').value;let note=document.getElementById('breastNote').value;let date=new Date().toDateString();localStorage.setItem('antonella_breast',date);document.getElementById('lastBreast').innerText=date;document.getElementById('breastResult').innerHTML = lump==='Yes' ? '<span class="badge red">Lump Logged - Please see doctor within 2 weeks</span><br>'+note : '<span class="badge green">No lump - Good! Saved</span>';}
+function saveBreast(){let lump=document.getElementById('breastLump').value;let note=document.getElementById('breastNote').value;let date=new Date().toDateString();localStorage.setItem('antonella_breast',date);document.getElementById('lastBreast').innerText=date;document.getElementById('breastResult').innerHTML = lump==='Yes' ? '<span class="badge red">Lump Logged - Please see the doctor immediately </span><br>'+note : '<span class="badge green">No lump - Good! Saved</span>'; if(document.getElementById('profileLastBreast')) document.getElementById('profileLastBreast').innerText=date;}
 const cervicalTexts = {
   en: {intro:"For education only. Not a diagnosis. Answer 4 questions to see if you should book a Pap Smear.", q1:"Have you had HPV Vaccine?", q2:"Bleeding after sex?", q3:"Unusual discharge?", q4:"Pelvic pain?", btn:"See My Risk", note:"This is for education only. If you have bleeding after sex, unusual discharge, or persistent pelvic pain, speak to a health professional promptly, even if your score is Low.", low:["Low","Keep doing Pap Smear every 3 years"], med:["Medium","Book a Pap Smear in next 3 months"], high:["High","Please see a doctor / book Pap Smear this month"]},
   pidgin: {intro:"For education only. E no be diagnosis. Answer 4 questions make we see if you suppose book Pap Smear.", q1:"You don collect HPV Vaccine?", q2:"Blood dey comot after sex?", q3:"Discharge wey no normal?", q4:"Pain for belle / waist?", btn:"See My Risk", note:"Na for education only. If blood dey comot after sex, discharge no normal, or pain no gree go, go meet doctor quick, even if your score na Low.", low:["Low","Continue Pap Smear every 3 years"], med:["Medium","Book Pap Smear for next 3 months"], high:["High","Abeg see doctor / book Pap Smear this month"]},
